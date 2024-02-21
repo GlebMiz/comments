@@ -5,11 +5,7 @@
         "dev": "vite",
         "build": "vue-tsc && vite build",
         "lint:ts": "eslint resources/js",
-        "lint:scss": "stylelint resources/scss",
-        "lint:ts:fix": "eslint resources/js --fix",
-        "lint:scss:fix": "stylelint resources/scss --fix",
-        "lint": "npm run lint:ts && npm run lint:scss",
-        "lint:fix": "npm run lint:ts --fix && npm run lint:scss --fix"
+        "lint:ts:fix": "eslint resources/js --fix"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
