@@ -1,7 +1,12 @@
 <script setup>
-
+    import HeaderComponent from '@/Components/HeaderComponent.vue'
 </script>
 
 <template>
-    <slot />
+    <HeaderComponent />
+    <main>
+        <div class="container">
+            <slot />
+        </div>
+    </main>
 </template>

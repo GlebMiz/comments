@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('path');
             $table->string('name');
-            $table->string('type');
+            $table->string('type', 10);
             $table->unsignedBigInteger('comment_id');
             $table->timestamps();
 

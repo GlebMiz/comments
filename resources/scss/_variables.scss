@@ -1,4 +1,10 @@
-$body-bg: white;
-$body-color: black;
-$primary: #a51c45;
-$primary-text-emphasis: white;
+$primary: rgb(12, 94, 114);
+$modal-md: 1000px;
+
+$container-max-widths: (
+  sm: 540px,
+  md: 540px,
+  lg: 600px,
+  xl: 700px,
+  xxl: 800px
+);

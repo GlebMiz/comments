@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { AxiosInstance } from 'axios';
 import ziggyRoute from 'ziggy-js';
