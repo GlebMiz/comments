@@ -5,3 +5,11 @@
         color: $red;
     }
 }
+
+.validation-error{
+    color: $red;
+   
+    &::first-letter{
+        text-transform: uppercase;
+    }
+}

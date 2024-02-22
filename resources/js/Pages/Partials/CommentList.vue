@@ -1,29 +1,10 @@
-<script setup>
+<script lang="ts" setup>
 import CommentItem from '@/Components/CommentItem.vue';
+import { Comment } from '@/interfaces/comment';
+defineProps<{
+    comments: Comment[]
+}>();
 
-const comments = [
-   {
-      name: 'GlebMiz',
-      email: 'glebmiz14@gmail.com',
-      date: '12.12.2024',
-      text: 'Text TExt TExt',
-      children: [
-         {
-            name: 'GlebMiz',
-            email: 'glebmiz14@gmail.com',
-            date: '12.12.2024',
-            text: 'Text TExt TExt <br> <p>asd</p>',
-            files: [
-               {
-                  type: 'image',
-                  name: 'Image',
-                  path: '/comment/img/photo.jpg'
-               }
-            ]
-         }
-      ]
-   }
-];
 </script>
 
 <template>

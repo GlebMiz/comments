@@ -1,10 +1,36 @@
 <script setup>
 import CommentItem from '@/Components/CommentItem.vue';
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
+import { useForm } from 'vee-validate';
+import * as yup from 'yup';
+import axios from 'axios';
 
-const name = ref(null);
-const email = ref(null);
-const text = ref(null);
+const { values, errors, defineField, handleSubmit } = useForm({
+    validationSchema: yup.object({
+        name: yup.string().required(),
+        email: yup.string().email().required(),
+        homepage: yup.string(),
+        text: yup.string().required(),
+    }),
+});
+
+const onSubmit = handleSubmit(() => {
+    axios.put(route('comment.add'), values
+    ).then(response => {
+        console.log(response.data.message);
+    }).catch(error => {
+        if (error.response.status === 422) {
+            console.log(error.response.data.errors);
+        } else {
+            console.log(error);
+        }
+    })
+});
+
+const [name] = defineField('name');
+const [email] = defineField('email');
+const [homepage] = defineField('homepage');
+const [text] = defineField('text');
 
 const allowedTags = ['a', 'code', 'i', 'strong'];
 watch(text, () => {
@@ -29,24 +55,37 @@ watch(text, () => {
                 </div>
                 <div class="modal-body comment-modal-body">
                     <div class="comment-form">
-                        <form method="POST" action="">
+                        {{ errors }}
+                        <form @submit="onSubmit" method="POST" action="">
                             <div class="mb-2">
                                 <label for="input-username" class="form-label form-label-required">User Name</label>
                                 <input id="input-username" v-model="name" type="text" class="form-control">
+                                <div v-if="errors.name" class="validation-error">
+                                    {{ errors.name }}
+                                </div>
                             </div>
                             <div class="mb-2">
                                 <label for="input-email" class="form-label form-label-required">E-mail</label>
                                 <input id="input-email" v-model="email" type="email" class="form-control">
+                                <div v-if="errors.email" class="validation-error">
+                                    {{ errors.email }}
+                                </div>
                             </div>
                             <div class="mb-2">
                                 <label for="input-homepage" class="form-label">Home Page</label>
-                                <input id="input-homepage" type="text" class="form-control">
+                                <input id="input-homepage" v-model="homepage" type="text" class="form-control">
+                                <div v-if="errors.homepage" class="validation-error">
+                                    {{ errors.homepage }}
+                                </div>
                             </div>
                             <div class="mb-2">
                                 <label for="input-text" class="form-label form-label-required">Comment Text</label>
                                 <textarea class="form-control" v-model="text" id="input-text" rows="3"></textarea>
+                                <div v-if="errors.text" class="validation-error">
+                                    {{ errors.text }}
+                                </div>
                             </div>
-                            <button type="button" class="btn btn-primary mt-1 px-4">Submit</button>
+                            <button type="submit" class="btn btn-primary mt-1 px-4">Submit</button>
                         </form>
                     </div>
                     <div class="comment-preview">
