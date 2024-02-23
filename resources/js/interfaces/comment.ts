@@ -5,10 +5,11 @@ interface CommentFiles {
 }
 
 export interface Comment {
+    id?: string;
     name: string;
     email: string;
     date: string;
     text: string;
     files?: CommentFiles[];
-    children?: Comment[];
+    replies?: Comment[];
 }

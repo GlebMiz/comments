@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-   <div class="comments-block mt-2">
+   <div v-if="comments" class="comments-block mt-2">
       <div class="comment-filter">
          <div class="comment-filter__name">
             <span data-filter="up">Name</span>
@@ -41,6 +41,7 @@ defineProps<{
          </ul>
       </nav>
    </div>
+   <div v-else class="text-center">There are empty now</div>
 </template>
 
 <style lang="scss">

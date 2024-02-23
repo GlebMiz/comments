@@ -26,6 +26,7 @@ class CommentsController extends Controller
         );
         $user->comments()->create([
             'text' => $request['text'],
+            'reply_id' => $request['comment_id'],
         ]);
 
         return response()->json(['message' => 'Comment has been created']);
@@ -35,16 +36,28 @@ class CommentsController extends Controller
     {
         $data = [];
 
-        $comments = Comment::limit(15)->get();
+        $comments = Comment::limit(15)->where('reply_id',null)->get();
         foreach($comments as $comment){
-            $data['comments'][] = [
-                'name' => $comment->user->username,
-                'email' => $comment->user->email,
-                'homepage' => $comment->user->homepage,
-                'text' => $comment->text,
-                'date' => Carbon::parse($comment->created_at)->format('d.m.Y H:i'),
-            ];
+            $data['comments'][] = $this->commentToData($comment);
         }
         return Inertia::render('Home', $data);
+    }
+
+    private function commentToData($comment){
+        $data = [];
+        $replies = [];
+        if($comment->replies)
+            foreach($comment->replies as $reply)
+                $replies[] = $this->commentToData($reply);
+        $data = [
+            'id' => $comment->id,
+            'name' => $comment->user->username,
+            'email' => $comment->user->email,
+            'homepage' => $comment->user->homepage,
+            'text' => $comment->text,
+            'date' => Carbon::parse($comment->created_at)->format('d.m.Y H:i'),
+            'replies' => $replies,
+        ];
+        return $data;
     }
 }

@@ -25,5 +25,6 @@ module.exports = {
         'vue/first-attribute-linebreak' : 'off',
         'vue/singleline-html-element-content-newline' : 'off',
         'vue/multiline-html-element-content-newline' : 'off',
+        'vue/no-v-html' : 'off',
     },
 };

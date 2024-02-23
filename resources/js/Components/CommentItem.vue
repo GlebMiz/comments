@@ -1,23 +1,8 @@
 <script lang="ts" setup>
-interface CommentFiles {
-    type: 'txt' | 'image';
-    name: string;
-    path: string;
-}
-
-interface Comments {
-    name: string;
-    email: string;
-    date: string;
-    text: string;
-    files: CommentFiles[];
-    children?: Comments[];
-}
-
+import { Comment } from '@/interfaces/comment';
 defineProps<{
-    comments: Comments[];
+    comments: Comment[];
 }>();
-
 </script>
 
 <template>
@@ -28,9 +13,7 @@ defineProps<{
                 <span class="comment__info-email">{{ comment.email }}</span>
                 <span class="comment__info-date">{{ comment.date }}</span>
             </div>
-            <div class="comment__text" v-html="comment.text">
-           
-            </div>
+            <div class="comment__text" v-html="comment.text" />
             <div v-if="comment.files" class="comment__files">
                 <a v-for="(file, fileKey) in comment.files" :key="fileKey" :href="file.path" :data-lightbox="file.name"
                     :data-title="file.name" class="comment__files-item comment__files-img"
@@ -39,9 +22,15 @@ defineProps<{
                     <span v-if="file.type == 'txt'" class="comment__files-text">{{ file.name }}</span>
                 </a>
             </div>
+            <div v-if="comment.id" class="comment__reply">
+                <span data-bs-toggle="modal" data-bs-target="#commentModal" :data-bs-id="comment.id" class="link-primary">
+                    <i class="bx bx-reply" />
+                    Reply
+                </span>
+            </div>
         </div>
-        <template v-if="comment.children">
-            <CommentItem :comments="comment.children" />
+        <template v-if="comment.replies">
+            <CommentItem :comments="comment.replies" />
         </template>
     </div>
 </template>
@@ -95,7 +84,7 @@ defineProps<{
     color: var(--bs-gray-700);
 }
 
-.comment__text{
+.comment__text {
     white-space: pre-wrap;
 }
 
@@ -157,5 +146,9 @@ defineProps<{
     .comment__files-txt:hover & {
         opacity: .7;
     }
+}
+
+.comment__reply span {
+    cursor: pointer;
 }
 </style>

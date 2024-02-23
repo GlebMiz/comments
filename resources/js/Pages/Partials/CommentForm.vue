@@ -1,11 +1,13 @@
-<script setup>
+<script lang="ts" setup>
 import CommentItem from '@/Components/CommentItem.vue';
-import { watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useForm } from 'vee-validate';
+import { router } from '@inertiajs/vue3';
+// @ts-expect-error yup
 import * as yup from 'yup';
 import axios from 'axios';
 
-const { values, errors, defineField, handleSubmit } = useForm({
+const { values, errors, defineField, handleSubmit, resetForm } = useForm({
     validationSchema: yup.object({
         name: yup.string().required(),
         email: yup.string().email().required(),
@@ -18,6 +20,10 @@ const onSubmit = handleSubmit(() => {
     axios.put(route('comment.add'), values
     ).then(response => {
         console.log(response.data.message);
+        const btnClose = document.querySelector('*[data-bs-dismiss="modal"]') as HTMLButtonElement;
+        if (btnClose)
+            btnClose.click();
+        router.visit('');
     }).catch(error => {
         if (error.response.status === 422) {
             console.log(error.response.data.errors);
@@ -27,6 +33,7 @@ const onSubmit = handleSubmit(() => {
     })
 });
 
+const [comment_id] = defineField('comment_id');
 const [name] = defineField('name');
 const [email] = defineField('email');
 const [homepage] = defineField('homepage');
@@ -37,6 +44,20 @@ watch(text, () => {
     const regex = new RegExp(`<(?!/?(${allowedTags.join('|')})\\b)[^>]+>`, 'gi');
     text.value = text.value.replace(regex, '');
 });
+
+onMounted(() => {
+    const exampleModal = document.getElementById('commentModal')
+    if (exampleModal) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        exampleModal.addEventListener('show.bs.modal', (event: any) => {
+            resetForm();
+            const button = event.relatedTarget
+            comment_id.value = button.getAttribute('data-bs-id');
+
+        })
+    }
+});
+
 </script>
 
 <template>
@@ -55,8 +76,8 @@ watch(text, () => {
                 </div>
                 <div class="modal-body comment-modal-body">
                     <div class="comment-form">
-                        {{ errors }}
-                        <form @submit="onSubmit" method="POST" action="">
+                        <form id="commentForm" @submit="onSubmit">
+                            <input id="commentId" v-model="comment_id" type="hidden" name="comment_id">
                             <div class="mb-2">
                                 <label for="input-username" class="form-label form-label-required">User Name</label>
                                 <input id="input-username" v-model="name" type="text" class="form-control">
@@ -80,7 +101,7 @@ watch(text, () => {
                             </div>
                             <div class="mb-2">
                                 <label for="input-text" class="form-label form-label-required">Comment Text</label>
-                                <textarea class="form-control" v-model="text" id="input-text" rows="3"></textarea>
+                                <textarea id="input-text" v-model="text" class="form-control" rows="3" />
                                 <div v-if="errors.text" class="validation-error">
                                     {{ errors.text }}
                                 </div>
@@ -93,9 +114,9 @@ watch(text, () => {
                         <CommentItem :comments="[
                             {
                                 name: name || 'Name',
-                                email: email || 'email@email.com',
+                                email: email || 'Email',
                                 date: new Date().toLocaleDateString(),
-                                text: text || 'Text...',
+                                text: text || 'Text text ...',
                             }
                         ]" />
                     </div>
