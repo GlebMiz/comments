@@ -15,12 +15,19 @@ defineProps<{
             </div>
             <div class="comment__text" v-html="comment.text" />
             <div v-if="comment.files" class="comment__files">
-                <a v-for="(file, fileKey) in comment.files" :key="fileKey" :href="file.path" :data-lightbox="file.name"
-                    :data-title="file.name" class="comment__files-item comment__files-img"
-                    :class="'comment__files-' + file.type == 'txt' ? 'txt' : 'img'">
-                    <img :src="file.path" :alt="file.name">
-                    <span v-if="file.type == 'txt'" class="comment__files-text">{{ file.name }}</span>
-                </a>
+                <template v-for="(file, fileKey) in comment.files"> 
+                    <a v-if="file.type == 'file'" :key="fileKey" :href="file.path" 
+                        :data-title="file.name" class="comment__files-item"
+                        :class="`comment__files-txt`">
+                        <img src="/img/txt.png" :alt="file.name">
+                        <span class="comment__files-text">{{ file.name }}</span>
+                    </a>
+                    <a v-if="file.type == 'image'" :key="fileKey" :href="file.path" :data-lightbox="file.name" 
+                        :data-title="file.name" class="comment__files-item"
+                        :class="`comment__files-img`">
+                        <img :src="file.path" :alt="file.name">
+                    </a>
+                </template>
             </div>
             <div v-if="comment.id" class="comment__reply">
                 <span data-bs-toggle="modal" data-bs-target="#commentModal" :data-bs-id="comment.id" class="link-primary">

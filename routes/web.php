@@ -18,4 +18,4 @@ use Inertia\Inertia;
 */
 
 Route::get('/', [CommentsController::class, 'list'])->name('home');
-Route::put('comments/add', [CommentsController::class, 'store'])->name('comment.add');
+Route::post('comments/add', [CommentsController::class, 'store'])->name('comment.add');

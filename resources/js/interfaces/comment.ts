@@ -1,5 +1,5 @@
 interface CommentFiles {
-    type: 'txt' | 'image';
+    type: 'file' | 'image';
     name: string;
     path: string;
 }

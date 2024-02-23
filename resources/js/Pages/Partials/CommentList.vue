@@ -1,9 +1,37 @@
 <script lang="ts" setup>
 import CommentItem from '@/Components/CommentItem.vue';
 import { Comment } from '@/interfaces/comment';
+import { router } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
+import { replaceQueryParams } from '@/helpers/replaceQueryParams';
+import Pagination from '@/Components/Pagination.vue';
+
 defineProps<{
-    comments: Comment[]
+   comments: Comment[],
+   maxPage: number,
 }>();
+
+const filter = (filter: string) => {
+   const filter_item = document.getElementById('filter-' + filter);
+   if (filter_item) {
+      const order = filter_item.getAttribute('data-filter') == 'up' ? 'down' : 'up';
+      const query = replaceQueryParams({filter: filter, order: order, page: ''})
+      router.visit(`/${query}`);
+   }
+};
+
+onMounted(() => {
+   const urlParams = new URLSearchParams(window.location.search);
+   const filterParam = urlParams.get('filter') ?? 'date';
+   const orderParam = urlParams.get('order') ?? 'down';
+
+   if (filterParam) {
+      const filterSpan = document.getElementById(`filter-${filterParam}`);
+      if (filterSpan) {
+            filterSpan.setAttribute('data-filter', orderParam);
+      }
+   }
+});
 
 </script>
 
@@ -11,35 +39,19 @@ defineProps<{
    <div v-if="comments" class="comments-block mt-2">
       <div class="comment-filter">
          <div class="comment-filter__name">
-            <span data-filter="up">Name</span>
+            <span id="filter-username" @click="filter('username')">Name</span>
          </div>
          <div class="comment-filter__email">
-            <span data-filter="down">Email</span>
+            <span id="filter-email" @click="filter('email')">Email</span>
          </div>
          <div class="comment-filter__date">
-            <span>Date Added</span>
+            <span id="filter-date" @click="filter('date')">Date Added</span>
          </div>
       </div>
       <div class="comment-list">
          <CommentItem :comments="comments" />
       </div>
-      <nav class="mt-3 d-flex justify-content-center" aria-label="Page navigation example">
-         <ul class="pagination">
-            <li class="page-item">
-               <a class="page-link" href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-               </a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-               <a class="page-link" href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-               </a>
-            </li>
-         </ul>
-      </nav>
+      <Pagination :max="maxPage" />
    </div>
    <div v-else class="text-center">There are empty now</div>
 </template>
