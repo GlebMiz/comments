@@ -1,11 +1,8 @@
 <?php
 
 use App\Http\Controllers\CommentsController;
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
+use App\Http\Controllers\CaptchaController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +16,4 @@ use Inertia\Inertia;
 
 Route::get('/', [CommentsController::class, 'list'])->name('home');
 Route::post('comments/add', [CommentsController::class, 'store'])->name('comment.add');
+Route::get('/captha',[CaptchaController::class,'get'])->name('captha.get');

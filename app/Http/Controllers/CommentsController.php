@@ -11,11 +11,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
-
+use HTMLPurifier;
+use HTMLPurifier_Config;
 class CommentsController extends Controller
 {
     public function store(CommentInsertRequest $request)
     {
+
+
+        $config = HTMLPurifier_Config::createDefault();
+        $config->set('HTML.Allowed', 'strong,a[href],i,code');
+        $purifier = new HTMLPurifier($config);
+        $valid_text = $purifier->purify($request['text']);
 
         $user = User::firstOrCreate(
             [
@@ -27,7 +34,7 @@ class CommentsController extends Controller
             ]
         );
         $comment = $user->comments()->create([
-            'text' => $request['text'],
+            'text' => $valid_text,
             'reply_id' => $request['comment_id'],
         ]);
 
@@ -107,7 +114,7 @@ class CommentsController extends Controller
     {
         $path = $file->store('public');
         $name = $file->getClientOriginalName();
-        
+
         $parts = explode("/", $path);
         $parts[0] = "storage";
 

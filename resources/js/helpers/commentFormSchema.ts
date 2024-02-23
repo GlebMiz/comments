@@ -20,4 +20,5 @@ export const schema = yup.object().shape({
             const trimmedValue = value.replace(/<[^>]*>/g, '').trim(); // Remove tags
             return trimmedValue.length > 0; // Check if there's any non-whitespace content
         }),
+        captcha: yup.string().required()
 });
