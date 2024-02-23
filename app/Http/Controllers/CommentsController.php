@@ -103,10 +103,10 @@ class CommentsController extends Controller
             'up' => 'asc',
             'down' => 'desc'
         ];
-
-        $filter = $request['filter'] && array_key_exists($request['filter'], $valid_filters) ? $valid_filters[$request['filter']] : 'created_at';
-        $order = $request['order'] && array_key_exists($request['order'], $valid_orders) ? $valid_orders[$request['order']] : 'desc';
-
+    
+        $filter = $valid_filters[$request['filter'] ?? null] ?? 'created_at';
+        $order = $valid_orders[$request['order'] ?? null] ?? 'desc';
+    
         return [$filter, $order];
     }
 
