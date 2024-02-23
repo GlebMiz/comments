@@ -20,5 +20,6 @@ composer install
 4.  ``` php artisan storage:link ``` & ```php artisan key:generate``` as required commands for application
    
 **Congratulation!** The application is ready to use.
+
 Now you can run ```npm run dev``` for development mode or if application is ready for production ```npm run build```
 You can also use ```php artisan serve``` to start the built-in PHP web server
