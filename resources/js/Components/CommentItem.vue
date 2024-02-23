@@ -3,6 +3,21 @@ import { Comment } from '@/interfaces/comment';
 defineProps<{
     comments: Comment[];
 }>();
+
+
+
+function escapeHTML(html) {
+    
+    console.log(html);
+    return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function convertCodeToString(input) {
+
+    const codeRegex =/<code>([\s\S]*?)<\/code>/g;
+    return input.replace(codeRegex, (match, p1) => `<code>${escapeHTML(p1)}</code>`);
+}
+
 </script>
 
 <template>
@@ -13,7 +28,7 @@ defineProps<{
                 <span class="comment__info-email">{{ comment.email }}</span>
                 <span class="comment__info-date">{{ comment.date }}</span>
             </div>
-            <div class="comment__text" v-html="comment.text" />
+            <div class="comment__text" v-html="convertCodeToString(comment.text)" />
             <div v-if="comment.files" class="comment__files">
                 <template v-for="(file, fileKey) in comment.files"> 
                     <a v-if="file.type == 'file'" :key="fileKey" :href="file.path" 
@@ -72,12 +87,14 @@ defineProps<{
 
 .comment__info-name {
     font-weight: bold;
-    width: 100px;
+    width: 150px;
+    white-space: nowrap;
 }
 
 .comment__info-email {
     font-size: .9rem;
     width: 200px;
+    white-space: nowrap;
 }
 
 .comment__info-email,

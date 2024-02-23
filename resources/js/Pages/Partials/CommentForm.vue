@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import CommentItem from '@/Components/CommentItem.vue';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useForm } from 'vee-validate';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -50,14 +50,6 @@ const [email] = defineField('email');
 const [homepage] = defineField('homepage');
 const [text] = defineField('text');
 const [captcha] = defineField('captcha');
-
-watch(text, newvalue => {
-    if (newvalue) {
-        const allowedTags = ['a', 'code', 'i', 'strong'];
-        const regex = new RegExp(`<(?!/?(${allowedTags.join('|')})\\b)[^>]+>`, 'gi');
-        text.value = text.value.replace(regex, '');
-    }
-});
 
 const writeTextTag = (usedTag: string) => {
     const tags = [
@@ -178,7 +170,8 @@ onMounted(() => {
                                     <input id="input-captcha" v-model="captcha" name="captcha" type="text"
                                         class="form-control mt-1">
                                 </div>
-                                <div v-if="errors.captcha || server_errors.captcha" id="error-image" class="validation-error">
+                                <div v-if="errors.captcha || server_errors.captcha" id="error-image"
+                                    class="validation-error">
                                     {{ errors.captcha ?? server_errors.captcha }}
                                 </div>
                             </div>
@@ -203,6 +196,8 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+@import "@/../scss/functions";
+
 .comment-form__cta {
     display: flex;
     justify-content: space-between;
@@ -217,6 +212,10 @@ onMounted(() => {
     display: grid;
     gap: 12px;
     grid-template-columns: repeat(2, 1fr);
+
+    @include media-breakpoint-down(md) {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
 
 .text-btn-panel {

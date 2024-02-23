@@ -8,18 +8,27 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use HTMLPurifier;
-use HTMLPurifier_Config;
+use Mews\Purifier\Facades\Purifier;
+
 class CommentsController extends Controller
 {
     public function store(CommentInsertRequest $request)
     {
 
+        $parts = preg_split('/(<code>.*?<\/code>)/s', $request['text'], -1, PREG_SPLIT_DELIM_CAPTURE);
 
-        $config = HTMLPurifier_Config::createDefault();
-        $config->set('HTML.Allowed', 'strong,a[href],i,code');
-        $purifier = new HTMLPurifier($config);
-        $valid_text = $purifier->purify($request['text']);
+        $config = [
+            'HTML.Allowed' => 'strong,a[href],i,code',
+        ];
+
+        $valid_text = array_map(function ($part) use ($config) {
+            if (strpos($part, '<code>') !== false) {
+                return $part;
+            } else {
+                return Purifier::clean($part, $config);
+            }
+        }, $parts);
+        $valid_text = implode('', $valid_text);
 
         $user = User::firstOrCreate(
             [
@@ -100,10 +109,10 @@ class CommentsController extends Controller
             'up' => 'asc',
             'down' => 'desc'
         ];
-    
+
         $filter = $valid_filters[$request['filter'] ?? null] ?? 'created_at';
         $order = $valid_orders[$request['order'] ?? null] ?? 'desc';
-    
+
         return [$filter, $order];
     }
 

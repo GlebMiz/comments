@@ -9,7 +9,7 @@ class LatinSymbols implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!preg_match('/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>\/?\s\n]*$/', $value)) 
+        if ($value && !preg_match('/[a-zA-Z\s\x{0080}-\x{024F}]/u', $value)) 
             $fail('Field must contain only latin letters');      
     }
 }
