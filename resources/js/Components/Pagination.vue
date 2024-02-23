@@ -16,7 +16,15 @@ const setPage = (page: number) => {
 };
 
 const urlParams = new URLSearchParams(window.location.search);
-const currentPage = urlParams.get('page') as unknown as number ?? 1;
+const currentPage = urlParams.get('page') ? parseInt(urlParams.get('page') as string) : 1;
+console.log(typeof currentPage)
+const start = currentPage - 3 > 0 ? currentPage - 3 : 1;
+const end = currentPage + 3 <= props.max ? currentPage + 3 : props.max;
+const pages: number[] = [];
+for (let i = start; i <= end; i++) {
+    pages.push(i);
+}
+
 </script>
 
 <template>
@@ -27,7 +35,7 @@ const currentPage = urlParams.get('page') as unknown as number ?? 1;
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <li v-for="n in max" :key="n" class="page-item" @click="setPage(n)"><a class="page-link" href="#">{{ n }}</a>
+            <li v-for="n in pages" :key="n" class="page-item" :class="{'active': currentPage == n}" @click="setPage(n)"><a class="page-link" href="#">{{ n }}</a>
             </li>
             <li class="page-item" :class="{ 'disabled': currentPage == max }" @click="setPage(currentPage + 1)">
                 <a class="page-link" href="#" aria-label="Next">

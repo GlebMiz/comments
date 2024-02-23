@@ -6,11 +6,8 @@ use App\Http\Requests\CommentInsertRequest;
 use App\Models\Comment;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Storage;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 class CommentsController extends Controller
@@ -48,7 +45,7 @@ class CommentsController extends Controller
 
     public function list(Request $request)
     {
-        $page_qtty = 2;
+        $page_qtty = 25;
         $page = $request['page'] ?: 1;
         [$filter, $order] = $this->orderFilters($request);
 
