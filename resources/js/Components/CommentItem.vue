@@ -6,16 +6,16 @@ defineProps<{
 
 
 
-function escapeHTML(html) {
+function escapeHTML(html: string) {
     
     console.log(html);
     return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function convertCodeToString(input) {
+function convertCodeToString(input: string) {
 
     const codeRegex =/<code>([\s\S]*?)<\/code>/g;
-    return input.replace(codeRegex, (match, p1) => `<code>${escapeHTML(p1)}</code>`);
+    return input.replace(codeRegex, (match: any, p1: any) => `<code>${escapeHTML(p1)}</code>`);
 }
 
 </script>
