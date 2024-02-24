@@ -19,7 +19,7 @@ class CommentInsertRequest extends FormRequest
             'text' => ['required',new RequiredText, 'string', 'max:1000', new HtmlTagsClosed, new LatinSymbols],
             'file' => ['file','mimes:txt','max:100'],
             'image' => ['file','mimes:png,gif,jpg','max:10000'],
-            //'captcha' => ['required',new Captcha],
+            'captcha' => ['required',new Captcha],
         ];
     }
 }
